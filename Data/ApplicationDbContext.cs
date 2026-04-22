@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+﻿using Agendamentos.Models;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
 namespace Agendamentos.Data
@@ -9,6 +10,8 @@ namespace Agendamentos.Data
             : base(options)
         {
         }
+        
+        public DbSet<Medico> Medicos { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {

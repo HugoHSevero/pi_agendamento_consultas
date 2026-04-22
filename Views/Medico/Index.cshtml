@@ -1,0 +1,177 @@
+﻿@model List<Medico>
+
+<div class="container mt-4">
+
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h2>Médicos</h2>
+        <a asp-action="Create" class="btn btn-success">
+            Novo Médico
+        </a>
+    </div>
+
+    @if (ViewBag.Erro != null)
+    {
+        <div class="alert alert-danger">
+            @ViewBag.Erro
+        </div>
+    }
+
+    <div class="card mb-3 shadow-sm">
+        <div class="card-body">
+            <form method="get" class="row g-2">
+                <div class="col-md-10">
+                    <div class="position-relative">
+                        <input type="text" id="searchInput" name="search"
+                               class="form-control pe-5"
+                               value="@Context.Request.Query["search"]"
+                               placeholder="Buscar por nome ou especialidade" />
+
+                        <!-- Botão X dentro do input -->
+                        <span id="clearSearch"
+                              class="position-absolute top-50 end-0 translate-middle-y me-3"
+                              style="cursor: pointer; display: none;">
+                            <i class="bi bi-x-circle"></i>
+                        </span>
+                    </div>
+                </div>
+
+                <div class="col-md-2">
+                    <button type="submit" class="btn btn-primary w-100">
+                        Buscar
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="card shadow-sm">
+        <div class="card-body p-0">
+            <table class="table table-hover align-middle mb-0">
+                <thead class="table-light">
+                <tr>
+                    <th>Nome</th>
+                    <th>Especialidade</th>
+                    <th>Status</th>
+                    <th class="text-end">Ações</th>
+                </tr>
+                </thead>
+                <tbody>
+                @foreach (var medico in Model)
+                {
+                    <tr>
+                        <td>
+                            <strong>@medico.Nome</strong>
+                        </td>
+
+                        <td>@medico.Especialidade</td>
+
+                        <td>
+                            @if (medico.Ativo)
+                            {
+                                <span class="badge bg-success">Ativo</span>
+                            }
+                            else
+                            {
+                                <span class="badge bg-secondary">Inativo</span>
+                            }
+                        </td>
+
+                        <td class="text-end">
+                            <div class="btn-group">
+                                <a asp-controller="Medico" asp-action="Edit" asp-route-id="@medico.Id"
+                                   class="btn btn-sm btn-outline-warning">
+                                    Editar
+                                </a>
+
+                                <a asp-action="ToggleAtivo" asp-route-id="@medico.Id"
+                                   class="btn btn-sm @(medico.Ativo ? "btn-outline-secondary" : "btn-outline-success")">
+                                    @(medico.Ativo ? "Inativar" : "Ativar")
+                                </a>
+
+                                @if (!medico.Ativo)
+                                {
+                                    <button class="btn btn-sm btn-outline-danger"
+                                            data-bs-toggle="modal"
+                                            data-bs-target="#confirmDeleteModal"
+                                            data-id="@medico.Id">
+                                        Excluir
+                                    </button>
+                                }
+                            </div>
+                        </td>
+                    </tr>
+                }
+                </tbody>
+            </table>
+
+            @if (!Model.Any())
+            {
+                <div class="text-center p-4 text-muted">
+                    Nenhum médico cadastrado
+                </div>
+            }
+        </div>
+    </div>
+    
+    <div class="modal fade" id="confirmDeleteModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+
+                <div class="modal-header">
+                    <h5 class="modal-title">Confirmar exclusão</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+
+                <div class="modal-body">
+                    Tem certeza que deseja excluir este médico?
+                </div>
+
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <a id="confirmDeleteBtn" class="btn btn-danger">Excluir</a>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+</div>
+
+@section Scripts {
+    <script>
+        var deleteModal = document.getElementById('confirmDeleteModal');
+
+        deleteModal.addEventListener('show.bs.modal', function (event) {
+            var button = event.relatedTarget;
+            var medicoId = button.getAttribute('data-id');
+
+            var confirmBtn = document.getElementById('confirmDeleteBtn');
+            confirmBtn.href = '/Medico/Delete/' + medicoId;
+        });
+
+        const input = document.getElementById("searchInput");
+        const clearBtn = document.getElementById("clearSearch");
+
+        function toggleClearButton() {
+            clearBtn.style.display = input.value ? "block" : "none";
+        }
+
+        // Mostrar/ocultar X ao digitar
+        input.addEventListener("input", function () {
+            toggleClearButton();
+
+            if (this.value === "") {
+                window.location.href = "/Medico";
+            }
+        });
+
+        // Clique no X
+        clearBtn.addEventListener("click", function () {
+            input.value = "";
+            window.location.href = "/Medico";
+        });
+
+        // Inicialização (caso venha com valor já preenchido)
+        document.addEventListener("DOMContentLoaded", toggleClearButton);
+    </script>
+}

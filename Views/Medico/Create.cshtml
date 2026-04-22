@@ -1,0 +1,46 @@
+﻿@model Medico
+
+<div class="container mt-4">
+    <h2>Novo Médico</h2>
+
+    <form asp-action="Create">
+        <div class="mb-3">
+            <label>Nome</label>
+            <input asp-for="Nome" class="form-control" />
+        </div>
+
+        <!--TODO: MUDAR PARA UMA TABELA NO FUTURO-->
+        <div class="mb-3">
+            <label>Especialidade</label>
+            <select asp-for="Especialidade" class="form-control">
+                <option>Clínico Geral</option>
+                <option>Cardiologista</option>
+                <option>Dermatologista</option>
+                <option>Pediatra</option>
+                <option>Oftalmologista</option>
+                <option>Ortopedista</option>
+            </select>
+        </div>
+
+        <div class="mb-3">
+            <label>Email</label>
+            <input asp-for="Email" class="form-control"/>
+            <span asp-validation-for="Email" class="text-danger"></span>
+        </div>
+
+        <div class="mb-3">
+            <label>Telefone</label>
+            <input asp-for="Telefone" class="form-control" maxlength="15" />
+        </div>
+
+        <button type="submit" class="btn btn-success">Salvar</button>
+        <a asp-action="Index" class="btn btn-secondary">Voltar</a>
+    </form>
+</div>
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            $('#Telefone').mask('(00) 00000-0000');
+        });
+    </script>
+}
