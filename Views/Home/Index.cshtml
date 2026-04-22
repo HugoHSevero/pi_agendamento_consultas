@@ -1,8 +1,97 @@
-﻿@{
-    ViewData["Title"] = "Home Page";
+﻿@if (!User.Identity.IsAuthenticated)
+{
+    <div class="container text-center mt-5">
+
+        <h1 class="mb-3">Sistema de Agendamento</h1>
+
+        <p class="lead mb-4">
+            Agende consultas de forma simples e rápida
+        </p>
+
+        <a href="/Identity/Account/Login" class="btn btn-primary me-2">
+            Entrar
+        </a>
+
+        <a href="/Identity/Account/Register" class="btn btn-outline-primary">
+            Criar conta
+        </a>
+
+        <p class="text-muted mt-4">
+            Projeto Integrador desenvolvido para a UNIVESP, com foco em desenvolvimento web e gestão de consultas.
+        </p>
+
+    </div>
+} 
+else if (User.IsInRole("Admin"))
+{
+    <div class="container mt-4">
+
+        <h2>Bem-vindo, @User.Identity.Name!</h2>
+        <p class="text-muted">
+            Você está na área administrativa do sistema.
+        </p>
+
+        <div class="row mt-4">
+
+            <div class="col-md-4">
+                <a href="/Medico" class="card p-3 shadow-sm text-decoration-none">
+                    <h5>Médicos</h5>
+                    <p>Gerenciar médicos</p>
+                </a>
+            </div>
+
+            <div class="col-md-4">
+                <a href="#" class="card p-3 shadow-sm text-decoration-none">
+                    <h5>Agenda</h5>
+                    <p>Gerenciar horários</p>
+                </a>
+            </div>
+
+            <div class="col-md-4">
+                <a href="#" class="card p-3 shadow-sm text-decoration-none">
+                    <h5>Agendamentos</h5>
+                    <p>Visualizar todos</p>
+                </a>
+            </div>
+
+        </div>
+
+    </div>
+}
+else
+{
+    <div class="container mt-4">
+
+        <h2>Bem-vindo, @User.Identity.Name!</h2>
+        <p class="text-muted">
+            Aqui você pode agendar e acompanhar suas consultas.
+        </p>
+
+        <div class="row mt-4">
+
+            <div class="col-md-6">
+                <a href="#" class="card p-3 shadow-sm text-decoration-none">
+                    <h5>Agendar consulta</h5>
+                    <p>Escolha médico, especialidade e horário</p>
+                </a>
+            </div>
+
+            <div class="col-md-6">
+                <a href="#" class="card p-3 shadow-sm text-decoration-none">
+                    <h5>Minhas consultas</h5>
+                    <p>Veja seus agendamentos</p>
+                </a>
+            </div>
+
+        </div>
+
+    </div>
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
-</div>
+<style>
+    .card:hover {
+        transform: scale(1.02);
+        transition: 0.2s;
+        cursor: pointer;
+    }
+</style>
