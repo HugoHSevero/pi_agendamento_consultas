@@ -24,66 +24,43 @@
 
     </div>
 } 
-else if (User.IsInRole("Admin"))
-{
-    <div class="container mt-4">
-
-        <h2>Bem-vindo, @User.Identity.Name!</h2>
-        <p class="text-muted">
-            Você está na área administrativa do sistema.
-        </p>
-
-        <div class="row mt-4">
-
-            <div class="col-md-4">
-                <a href="/Medico" class="card p-3 shadow-sm text-decoration-none">
-                    <h5>Médicos</h5>
-                    <p>Gerenciar médicos</p>
-                </a>
-            </div>
-
-            <div class="col-md-4">
-                <a href="#" class="card p-3 shadow-sm text-decoration-none">
-                    <h5>Agenda</h5>
-                    <p>Gerenciar horários</p>
-                </a>
-            </div>
-
-            <div class="col-md-4">
-                <a href="#" class="card p-3 shadow-sm text-decoration-none">
-                    <h5>Agendamentos</h5>
-                    <p>Visualizar todos</p>
-                </a>
-            </div>
-
-        </div>
-
-    </div>
-}
 else
 {
     <div class="container mt-4">
 
         <h2>Bem-vindo, @User.Identity.Name!</h2>
         <p class="text-muted">
-            Aqui você pode agendar e acompanhar suas consultas.
+            Aqui você pode abrir e acompanhar os seus chamados.
         </p>
 
         <div class="row mt-4">
 
-            <div class="col-md-6">
-                <a href="#" class="card p-3 shadow-sm text-decoration-none">
-                    <h5>Agendar consulta</h5>
-                    <p>Escolha médico, especialidade e horário</p>
-                </a>
+            <div class="col-md-4">
+                <div class="card shadow h-100 text-center p-3">
+                    <h5>Abrir Chamado</h5>
+                    <p>Criar uma nova solicitação</p>
+                    <a href="/Chamados/Create" class="btn btn-primary">Abrir</a>
+                </div>
             </div>
 
-            <div class="col-md-6">
-                <a href="#" class="card p-3 shadow-sm text-decoration-none">
-                    <h5>Minhas consultas</h5>
-                    <p>Veja seus agendamentos</p>
-                </a>
+            <div class="col-md-4">
+                <div class="card shadow h-100 text-center p-3">
+                    <h5>Meus Chamados</h5>
+                    <p>Visualizar seus chamados</p>
+                    <a href="/Chamados" class="btn btn-success">Ver</a>
+                </div>
             </div>
+            
+            @if (User.IsInRole("Admin"))
+            {
+                <div class="col-md-4">
+                    <div class="card shadow h-100 text-center p-3">
+                        <h5>Administração</h5>
+                        <p>Gerenciar usuários e chamados</p>
+                        <a href="/Admin" class="btn btn-dark">Acessar</a>
+                    </div>
+                </div>
+            }
 
         </div>
 
