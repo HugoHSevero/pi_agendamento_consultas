@@ -6,7 +6,7 @@ namespace Agendamentos.Data
     {
         public static async Task SeedRoles(RoleManager<IdentityRole> roleManager)
         {
-            string[] roles = { "Admin", "Paciente" };
+            string[] roles = { "Admin", "Usuario" };
 
             foreach (var role in roles)
             {

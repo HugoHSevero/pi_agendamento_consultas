@@ -8,8 +8,8 @@ namespace Agendamentos.Controllers
     [Authorize(Roles = "Admin")]
     public class AdminController : Controller
     {
-        private readonly UserManager<IdentityUser> _userManager;
-        public AdminController(UserManager<IdentityUser> userManager)
+        private readonly UserManager<ApplicationUser> _userManager;
+        public AdminController(UserManager<ApplicationUser> userManager)
         {
             _userManager = userManager;
         }
