@@ -11,8 +11,6 @@ namespace Agendamentos.Data
         {
         }
         
-        public DbSet<Medico> Medicos { get; set; }
-
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
