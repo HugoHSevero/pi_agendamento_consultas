@@ -1,0 +1,30 @@
+﻿@model List<Chamado>
+
+<div class="container mt-5">
+    <h2>Meus Chamados</h2>
+
+    <a href="/Chamados/Create" class="btn btn-success mb-3">Novo Chamado</a>
+
+    @foreach (var item in Model)
+    {
+        <div class="card mb-3 p-3 shadow">
+            <div class="d-flex justify-content-between">
+                <h5>@item.Titulo</h5>
+                <span class="badge bg-secondary">@item.Status</span>
+            </div>
+
+            <p>@item.Descricao</p>
+
+            <small>Categoria: @item.Categoria</small><br />
+
+            @if (User.IsInRole("Admin"))
+            {
+                <small>Usuário: @item.Usuario?.Email</small><br />
+            }
+
+            <a href="/Chamados/Details/@item.Id" class="btn btn-primary mt-2">
+                Ver Detalhes
+            </a>
+        </div>
+    }
+</div>
