@@ -4,6 +4,7 @@ using Agendamentos.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Agendamentos.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260504022752_CreateChamados")]
+    partial class CreateChamados
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -146,39 +149,6 @@ namespace Agendamentos.Migrations
                     b.HasIndex("UsuarioId");
 
                     b.ToTable("Chamados");
-                });
-
-            modelBuilder.Entity("MensagemChamado", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("ChamadoId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Conteudo")
-                        .IsRequired()
-                        .HasMaxLength(255)
-                        .HasColumnType("varchar(255)");
-
-                    b.Property<DateTime>("DataEnvio")
-                        .HasColumnType("datetime(6)");
-
-                    b.Property<string>("UsuarioId")
-                        .IsRequired()
-                        .HasMaxLength(255)
-                        .HasColumnType("varchar(255)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ChamadoId");
-
-                    b.HasIndex("UsuarioId");
-
-                    b.ToTable("MensagensChamado");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -342,25 +312,6 @@ namespace Agendamentos.Migrations
                     b.Navigation("Usuario");
                 });
 
-            modelBuilder.Entity("MensagemChamado", b =>
-                {
-                    b.HasOne("Chamado", "Chamado")
-                        .WithMany("Mensagens")
-                        .HasForeignKey("ChamadoId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("ApplicationUser", "Usuario")
-                        .WithMany()
-                        .HasForeignKey("UsuarioId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Chamado");
-
-                    b.Navigation("Usuario");
-                });
-
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
                 {
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", null)
@@ -410,11 +361,6 @@ namespace Agendamentos.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-                });
-
-            modelBuilder.Entity("Chamado", b =>
-                {
-                    b.Navigation("Mensagens");
                 });
 #pragma warning restore 612, 618
         }

@@ -1,0 +1,59 @@
+﻿@model List<Chamado>
+
+<div class="container mt-4">
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item">
+                <a asp-controller="Home" asp-action="Index">Home</a>
+            </li>
+        </ol>
+    </nav>
+    
+    <h2>Meus Chamados</h2>
+
+    <a href="/Chamados/Create" class="btn btn-success mb-3">Novo Chamado</a>
+    
+    <table class="table table-hover align-middle">
+        <thead class="table-light">
+        <tr>
+            <th>#</th>
+            <th>Título</th>
+            <th>Status</th>
+            <th>Categoria</th>
+            <th>Data</th>
+            <th></th>
+        </tr>
+        </thead>
+        
+        <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>#@item.Id</td>
+
+                <td>@item.Titulo</td>
+
+                <td>
+                    <span class="badge 
+                            @(item.Status == StatusChamado.Aberto ? "bg-secondary" :
+                            item.Status == StatusChamado.EmAndamento ? "bg-warning text-dark" :
+                            "bg-success")">
+                        @Html.DisplayFor(m => item.Status)
+                    </span>
+                </td>
+
+                <td>@Html.DisplayFor(m => item.Categoria)</td>
+
+                <td>@item.DataCriacao.ToString("dd/MM/yyyy HH:mm")</td>
+
+                <td>
+                    <a asp-action="Details" asp-route-id="@item.Id"
+                       class="btn btn-sm btn-primary">
+                        Ver
+                    </a>
+                </td>
+            </tr>
+        }
+        </tbody>
+    </table>
+</div>
