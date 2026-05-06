@@ -12,6 +12,7 @@ namespace Agendamentos.Data
         }
         
         public DbSet<Chamado> Chamados { get; set; }
+        public DbSet<MensagemChamado> MensagensChamado { get; set; }
         
         protected override void OnModelCreating(ModelBuilder builder)
         {

@@ -25,16 +25,22 @@ public class ChamadosController : Controller
     }
     
     // LISTA TODOS OS CHAMADOS
-    public async Task<IActionResult> Backlog()
+    public async Task<IActionResult> Backlog(StatusChamado? status)
     {
         if (!User.IsInRole("Admin"))
             return Unauthorized();
 
-        var chamados = await _context.Chamados
+        var chamados = _context.Chamados
             .Include(c => c.Usuario)
-            .ToListAsync();
+            .AsQueryable();    
+        //.ToListAsync();
+        
+        if (status.HasValue)
+        {
+            chamados = chamados.Where(c => c.Status == status.Value);
+        }
 
-        return View(chamados);
+        return View(await chamados.ToListAsync());
     }
 
     // CREATE (GET)
@@ -63,6 +69,8 @@ public class ChamadosController : Controller
     {
         var chamado = await _context.Chamados
             .Include(c => c.Usuario)
+            .Include(c => c.Mensagens)
+            .ThenInclude(m => m.Usuario)
             .FirstOrDefaultAsync(c => c.Id == id);
 
         if (chamado == null)
@@ -84,5 +92,24 @@ public class ChamadosController : Controller
         await _context.SaveChangesAsync();
 
         return RedirectToAction("Details", new { id = id });
+    }
+    
+    [HttpPost]
+    public async Task<IActionResult> EnviarMensagem(int chamadoId, string conteudo)
+    {
+        var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+        var mensagem = new MensagemChamado
+        {
+            ChamadoId = chamadoId,
+            Conteudo = conteudo,
+            DataEnvio = DateTime.Now,
+            UsuarioId = userId
+        };
+
+        _context.MensagensChamado.Add(mensagem);
+        await _context.SaveChangesAsync();
+
+        return RedirectToAction("Details", new { id = chamadoId });
     }
 }

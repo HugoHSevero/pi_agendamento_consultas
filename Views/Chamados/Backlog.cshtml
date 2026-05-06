@@ -1,40 +1,77 @@
 ﻿@using System.Security.Claims
 @model List<Chamado>
 
-<div class="container mt-5">
+<div class="container mt-4">
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item">
+                <a asp-controller="Home" asp-action="Index">Home</a>
+            </li>
+        </ol>
+    </nav>
+    
     <h2>Backlog de Chamados</h2>
 
-    @foreach (var item in Model)
-    {
-        <div class="card mb-3 p-3 shadow">
+    <div class="mb-3">
 
-            <div class="d-flex justify-content-between align-items-center">
+        <a asp-action="Backlog" class="btn btn-outline-secondary btn-sm">Todos</a>
 
-                <h5>@item.Titulo</h5>
+        <a asp-action="Backlog" asp-route-status="Aberto" class="btn btn-outline-secondary btn-sm">
+            Abertos
+        </a>
 
-                <div>
-                    <span class="badge bg-secondary">@item.Status</span>
+        <a asp-action="Backlog" asp-route-status="EmAndamento" class="btn btn-outline-secondary btn-sm">
+            Em andamento
+        </a>
 
-                    @if (item.UsuarioId != User.FindFirstValue(ClaimTypes.NameIdentifier))
-                    {
-                        <span class="badge bg-info">Cliente</span>
-                    }
-                    else
-                    {
-                        <span class="badge bg-dark">Meu</span>
-                    }
-                </div>
+        <a asp-action="Backlog" asp-route-status="Concluido" class="btn btn-outline-secondary btn-sm">
+            Concluídos
+        </a>
 
-            </div>
+    </div>
 
-            <p>@item.Descricao</p>
+    <table class="table table-hover">
+        <thead>
+        <tr>
+            <th>#</th>
+            <th>Título</th>
+            <th>Status</th>
+            <th>Categoria</th>
+            <th>Usuário</th>
+            <th>Data</th>
+            <th></th>
+        </tr>
+        </thead>
+        <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>#@item.Id</td>
+                <td>@item.Titulo</td>
 
-            <small>Categoria: @item.Categoria</small><br />
-            <small>Usuário: @item.Usuario?.Email</small>
+                <td>
+                    <span class="badge 
+                        @(item.Status == StatusChamado.Aberto ? "bg-secondary" :
+                        item.Status == StatusChamado.EmAndamento ? "bg-warning text-dark" :
+                        "bg-success")">
+                        @Html.DisplayFor(m => item.Status)
+                    </span>
+                </td>
 
-            <a href="/Chamados/Details/@item.Id" class="btn btn-primary mt-2">
-                Ver Detalhes
-            </a>
-        </div>
-    }
+                <td>@Html.DisplayFor(m => item.Categoria)</td>
+                <td>@item.Usuario?.Email</td>
+                <td>@item.DataCriacao</td>
+
+                <td>
+                    <a asp-action="Details" asp-route-id="@item.Id"
+                       class="btn btn-sm btn-primary">
+                        Ver
+                    </a>
+                </td>
+            </tr>
+        }
+        </tbody>
+
+    </table>
+
 </div>

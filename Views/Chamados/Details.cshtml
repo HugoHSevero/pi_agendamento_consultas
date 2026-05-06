@@ -1,34 +1,106 @@
 ﻿@model Chamado
+@using System.Security.Claims
 
-<div class="container mt-5">
-    <h2>@Model.Titulo</h2>
-
-    <p>@Model.Descricao</p>
-
-    <p><strong>Status:</strong> @Model.Status</p>
-    <p><strong>Categoria:</strong> @Model.Categoria</p>
-    <p><strong>Data:</strong> @Model.DataCriacao</p>
-
-    @if (User.IsInRole("Admin"))
-    {
-        <p><strong>Usuário:</strong> @Model.Usuario?.Email</p>
-    }
+<div class="container mt-4">
     
-    @if (User.IsInRole("Admin"))
-    {
-        <form asp-action="AlterarStatus" method="post" class="mt-3">
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item">
+                <a asp-controller="Home" asp-action="Index">Home</a>
+            </li>
+            @if (User.IsInRole("Admin"))
+            {
+                <li class="breadcrumb-item">
+                    <a asp-controller="Chamados" asp-action="Backlog">Backlog</a>
+                </li>
+            }
+            else
+            {
+                <li class="breadcrumb-item">
+                    <a asp-controller="Chamados" asp-action="Index">Meus Chamados</a>
+                </li>
+            }
+            <li class="breadcrumb-item active">
+                Chamado #@Model.Id
+            </li>
+        </ol>
+    </nav>
+    
+    <h2>Detalhes de Chamados</h2>
 
-            <input type="hidden" name="id" value="@Model.Id" />
+    <div class="card shadow-sm mb-4">
+        <div class="card-body">
+            <div class="d-flex justify-content-between align-items-start">
+                <div>
+                    <h3 class="mb-1">#@Model.Id - @Model.Titulo</h3>
+                    <span class="badge 
+                        @(Model.Status == StatusChamado.Aberto ? "bg-secondary" :
+                          Model.Status == StatusChamado.EmAndamento ? "bg-warning text-dark" :
+                          "bg-success")">
+                        @Html.DisplayFor(m => m.Status)
+                    </span>
+                </div>
 
-            <select name="status" class="form-control mb-2"
-                    asp-items="Html.GetEnumSelectList<StatusChamado>()">
-            </select>
+                @if (User.IsInRole("Admin"))
+                {
+                    <form asp-action="AlterarStatus" method="post" class="d-flex gap-2">
+                        <input type="hidden" name="id" value="@Model.Id" />
+                        <select asp-for="Status"
+                                class="form-select form-select-sm"
+                                asp-items="Html.GetEnumSelectList<StatusChamado>()">
+                        </select>
+                        <button type="submit" class="btn btn-sm btn-warning">
+                            Atualizar
+                        </button>
+                    </form>
+                }
+            </div>
 
-            <button type="submit" class="btn btn-warning">
-                Alterar Status
-            </button>
-        </form>
-    }
+            <hr />
 
-    <a href="/Chamados" class="btn btn-secondary mt-3">Voltar</a>
+            <p class="fs-5">@Model.Descricao</p>
+            <div class="text-muted small mt-3">
+                <div><strong>Categoria:</strong> @Model.Categoria</div>
+                <div><strong>Data:</strong> @Model.DataCriacao</div>
+                <div><strong>Usuário:</strong> @Model.Usuario?.Email</div>
+            </div>
+
+        </div>
+    </div>
+
+    <div class="card shadow-sm mb-4">
+        <div class="card-body">
+            <h5 class="mb-3">Mensagens</h5>
+            @foreach (var msg in Model.Mensagens.OrderBy(m => m.DataEnvio))
+            {
+                var isMe = msg.UsuarioId == User.FindFirstValue(ClaimTypes.NameIdentifier);
+                <div class="d-flex mb-2 @(isMe ? "justify-content-end" : "justify-content-start")">
+                    <div class="p-2 rounded 
+                        @(isMe ? "bg-primary text-white" : "bg-light")"
+                         style="max-width: 70%;">
+                        <div class="small fw-bold">
+                            @msg.Usuario?.Email
+                        </div>
+                        <div>@msg.Conteudo</div>
+                        <div class="small text-muted">
+                            @msg.DataEnvio
+                        </div>
+                    </div>
+                </div>
+            }
+
+            <form asp-action="EnviarMensagem" method="post" class="mt-3">
+                <input type="hidden" name="chamadoId" value="@Model.Id" />
+                <div class="input-group">
+                    <textarea name="conteudo"
+                              class="form-control"
+                              placeholder="Digite sua mensagem..."></textarea>
+                    <button type="submit" class="btn btn-primary">
+                        Enviar
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
 </div>

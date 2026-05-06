@@ -22,4 +22,6 @@ public class Chamado
 
     public string UsuarioId { get; set; }
     public ApplicationUser Usuario { get; set; }
+    
+    public List<MensagemChamado> Mensagens { get; set; }
 }

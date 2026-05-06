@@ -33,7 +33,7 @@ else
             Aqui você pode abrir e acompanhar os seus chamados.
         </p>
 
-        <div class="row mt-4">
+        <div class="row g-4">
 
             <div class="col-md-4">
                 <div class="card shadow h-100 text-center p-3">
@@ -54,9 +54,19 @@ else
             @if (User.IsInRole("Admin"))
             {
                 <div class="col-md-4">
+                    <div class="card shadow-sm p-3">
+                        <h5>Backlog</h5>
+                        <p>Gerenciar todos os chamados do sistema</p>
+                        <a asp-controller="Chamados" asp-action="Backlog" class="btn btn-warning">
+                            Acessar
+                        </a>
+                    </div>
+                </div>
+                
+                <div class="col-md-4">
                     <div class="card shadow h-100 text-center p-3">
                         <h5>Administração</h5>
-                        <p>Gerenciar usuários e chamados</p>
+                        <p>Gerenciar usuários</p>
                         <a href="/Admin" class="btn btn-dark">Acessar</a>
                     </div>
                 </div>
